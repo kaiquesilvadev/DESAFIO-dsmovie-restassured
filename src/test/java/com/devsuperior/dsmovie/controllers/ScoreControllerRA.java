@@ -64,8 +64,20 @@ private Map<String, Object> postScoreInstance;
 			.statusCode(HttpStatus.NOT_FOUND.value());
 	}
 	
+	@DisplayName("save Score deve retornar UnprocessableEntity quando faltar MovieId")
 	@Test
 	public void saveScoreShouldReturnUnprocessableEntityWhenMissingMovieId() throws Exception {
+		postScoreInstance.put("movieId", null);
+		JSONObject newProduct = new JSONObject(postScoreInstance);
+		
+		RestAssured.given()
+		.header("Content-type", "application/json")
+		.header("Authorization", "Bearer " + adminToken)
+		.body(newProduct)
+		.when()
+			.put("/scores")
+		.then()
+			.statusCode(HttpStatus.UNPROCESSABLE_ENTITY.value());
 	}
 	
 	@Test
