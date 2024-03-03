@@ -132,7 +132,18 @@ public class MovieControllerRA {
 			.statusCode(HttpStatus.FORBIDDEN.value());
 	}
 	
+	@DisplayName("insert deve retornar não autorizado quando token inválido")
 	@Test
 	public void insertShouldReturnUnauthorizedWhenInvalidToken() throws Exception {
+		JSONObject newProduct = new JSONObject(postMovieInstance);
+		
+		RestAssured.given()
+		.header("Content-type", "application/json")
+		.header("Authorization", "Bearer " + invalidToken)
+		.body(newProduct)
+		.when()
+			.post("/movies")
+		.then()
+			.statusCode(HttpStatus.UNAUTHORIZED.value());
 	}
 }
