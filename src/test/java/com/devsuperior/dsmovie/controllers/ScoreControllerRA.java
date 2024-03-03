@@ -80,7 +80,19 @@ private Map<String, Object> postScoreInstance;
 			.statusCode(HttpStatus.UNPROCESSABLE_ENTITY.value());
 	}
 	
+	@DisplayName("save Score deve retornar entidade não processável quando a pontuação for menor que zero")
 	@Test
 	public void saveScoreShouldReturnUnprocessableEntityWhenScoreIsLessThanZero() throws Exception {		
+		postScoreInstance.put("score", -0.0);
+		JSONObject newProduct = new JSONObject(postScoreInstance);
+		
+		RestAssured.given()
+		.header("Content-type", "application/json")
+		.header("Authorization", "Bearer " + adminToken)
+		.body(newProduct)
+		.when()
+			.put("/scores")
+		.then()
+			.statusCode(HttpStatus.UNPROCESSABLE_ENTITY.value());
 	}
 }
