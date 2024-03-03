@@ -1,5 +1,7 @@
 package com.devsuperior.dsmovie.controllers;
 
+import static org.hamcrest.CoreMatchers.hasItems;
+import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.Mockito.when;
 
 import org.json.JSONException;
@@ -18,6 +20,7 @@ public class MovieControllerRA {
 	private String adminToken, clientToken, invalidToken;
 	
 	private Long idExistente , idInexistente ;
+	private String titulo;
 
 	@BeforeEach
 	void setUp() throws Exception {
@@ -31,7 +34,7 @@ public class MovieControllerRA {
 		adminToken = TokenUtil.obtainAccessToken(adminUsername, adminPassword);
 		invalidToken = adminToken + "xpto";
 		
-	
+		titulo = "Witcher"; 
 		idExistente = 2l;
 		idInexistente = 1000l;
 		
@@ -49,8 +52,17 @@ public class MovieControllerRA {
 				.statusCode(HttpStatus.OK.value());
 	}
 	
+	@DisplayName("findAll deve retornar filmes paginados quando o parâmetro do título do filme não estiver vazio")
 	@Test
-	public void findAllShouldReturnPagedMoviesWhenMovieTitleParamIsNotEmpty() {		
+	public void findAllShouldReturnPagedMoviesWhenMovieTitleParamIsNotEmpty() {
+		
+		RestAssured.given()
+		.when()
+			.get("/movies?title={titulo}" , titulo)
+		.then()
+			.statusCode(HttpStatus.OK.value())
+			.body("content.id[0]", is(1))
+			.body("content.title", hasItems("The Witcher"));
 	}
 	
 	@Test
