@@ -79,8 +79,14 @@ public class MovieControllerRA {
 			.body("title", equalTo("Venom: Tempo de Carnificina"));
 	}
 	
+	@DisplayName("findById deve retornar não encontrado quando Id não existe")
 	@Test
-	public void findByIdShouldReturnNotFoundWhenIdDoesNotExist() {	
+	public void findByIdShouldReturnNotFoundWhenIdDoesNotExist() {
+		RestAssured.given()
+		.when()
+			.get("/movies/{id}" , idInexistente)
+		.then()
+			.statusCode(HttpStatus.NOT_FOUND.value());
 	}
 	
 	@Test
