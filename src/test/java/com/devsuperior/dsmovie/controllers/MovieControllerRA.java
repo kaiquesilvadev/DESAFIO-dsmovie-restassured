@@ -117,8 +117,19 @@ public class MovieControllerRA {
 			.statusCode(HttpStatus.UNPROCESSABLE_ENTITY.value());
 	}
 	
+	@DisplayName("insert deve retornar Forbidden quando o cliente está logado")
 	@Test
 	public void insertShouldReturnForbiddenWhenClientLogged() throws Exception {
+		JSONObject newProduct = new JSONObject(postMovieInstance);
+		
+		RestAssured.given()
+		.header("Content-type", "application/json")
+		.header("Authorization", "Bearer " + clientToken)
+		.body(newProduct)
+		.when()
+			.post("/movies")
+		.then()
+			.statusCode(HttpStatus.FORBIDDEN.value());
 	}
 	
 	@Test
