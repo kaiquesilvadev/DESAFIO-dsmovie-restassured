@@ -1,5 +1,6 @@
 package com.devsuperior.dsmovie.controllers;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.Mockito.when;
@@ -65,8 +66,17 @@ public class MovieControllerRA {
 			.body("content.title", hasItems("The Witcher"));
 	}
 	
+	@DisplayName("findById deve retornar o filme quando o Id existir")
 	@Test
-	public void findByIdShouldReturnMovieWhenIdExists() {		
+	public void findByIdShouldReturnMovieWhenIdExists() {
+		
+		RestAssured.given()
+		.when()
+			.get("/movies/{id}" , idExistente)
+		.then()
+			.statusCode(HttpStatus.OK.value())
+			.body("id", is(2))
+			.body("title", equalTo("Venom: Tempo de Carnificina"));
 	}
 	
 	@Test
